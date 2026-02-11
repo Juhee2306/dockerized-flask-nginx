@@ -95,15 +95,23 @@ Learning: Containers are disposable — recreating them is safer than restarting
 ## Key Learnings
 
 -Difference between host ports and container ports
+
 -Why application servers should not face the internet directly
+
 -Role of Nginx as a reverse proxy
+
 -Docker networking and service-name DNS
+
 -Using logs to diagnose failures instead of reinstalling blindly
+
 -Treating infrastructure as reproducible and disposable
 
 ## Outcome
 A working, production-style containerized setup with:
 -Clean traffic flow
+
 -Proper separation of concerns
+
 -Debuggable failure scenarios
+
 -Clear understanding of runtime behavior
