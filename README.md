@@ -53,7 +53,7 @@ proxy_pass http://app:5000;
 ```bash
 docker compose up --build
 ```
-Access the application at:
+Access the Application at:
 ```bash
 http://localhost
 ```
