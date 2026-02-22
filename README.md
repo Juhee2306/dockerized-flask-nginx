@@ -112,22 +112,22 @@ A working, production-style containerized setup with:
 ## Cloud Deployment (AWS EC2)
 
 This application was deployed on an Amazon Linux EC2 instance.
-##Deployment Steps:
--Launched EC2 instance (Amazon Linux 2023)
--Configured security group:
--Port 22 (SSH – My IP)
--Port 80 (HTTP – Public)
--Installed Docker and Docker Compose manually
--Cloned repository on EC2
--Built and ran containers
--Accessed application via public IP
+## Deployment Steps:
+- Launched EC2 instance (Amazon Linux 2023)
+- Configured security group:
+- Port 22 (SSH – My IP)
+- Port 80 (HTTP – Public)
+- Installed Docker and Docker Compose manually
+- Cloned repository on EC2
+- Built and ran containers
+- Accessed application via public IP
 
 ## Public Architecture:
 
 Client → Internet → EC2 (Port 80) → Nginx → Flask (Port 5000)
 
 ## Real-World Issues Faced:
--Docker Compose buildx not available on Amazon Linux
--Manual installation of Compose plugin required
--SSH session interruptions
--Understanding container restart behavior after instance stop
+- Docker Compose buildx not available on Amazon Linux
+- Manual installation of Compose plugin required
+- SSH session interruptions
+- Understanding container restart behavior after instance stop
