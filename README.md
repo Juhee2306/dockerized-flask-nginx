@@ -67,7 +67,7 @@ http://localhost
 ## CI/CD Pipeline
 The project includes an automated deployment pipeline using GitHub Actions.
 Pipeline workflow:
-
+```bash
 Git Push
    ↓
 GitHub Actions
@@ -81,7 +81,7 @@ SSH into AWS EC2
 docker compose pull
    ↓
 docker compose up -d
-
+```
 This allows the application to update automatically after every commit.
 ## Cloud Deployment
 The application runs on an AWS EC2 instance (Amazon Linux).
@@ -106,9 +106,9 @@ Client → Internet → EC2 → Nginx → Flask
 ## Example Failure Scenario
 Stopping the Flask container results in:
 502 Bad Gateway
-# Diagnosis:
+### Diagnosis:
 docker compose logs nginx
-# Learning:
+### Learning:
 Reverse proxies depend on upstream services being available.
 ## Outcome
 A production-style containerized system with:
