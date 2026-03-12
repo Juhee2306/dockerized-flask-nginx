@@ -1,17 +1,24 @@
-# Dockerized Flask App with Nginx Reverse Proxy
+# Dockerized Flask Application with Nginx Reverse Proxy and CI/CD Deployment
 ## Overview
 
-This project demonstrates how a simple web application is run, exposed, proxied, and debugged using Docker, Docker Compose, and Nginx.
-The goal of this project is not backend development, but to understand application runtime behavior, container networking, traffic flow,
-and real-world debugging scenarios that DevOps and Cloud engineers encounter in production systems.
-A minimal Flask app is used intentionally so the focus remains on infrastructure, not application logic
+This project demonstrates how a simple web application can be containerized, reverse-proxied, deployed, and debugged using modern DevOps tooling.
+The focus of this project is infrastructure behavior and deployment workflows, not backend complexity. A minimal Flask application is intentionally used so the emphasis remains on:
+- Container networking
+- Reverse proxy architecture
+- Traffic flow
+- Infrastructure debugging
+- CI/CD automation
+- Cloud deployment on AWS
 
 ## Tech Stack
 - Docker
 - Docker Compose
 - Nginx (Reverse Proxy)
 - Flask (minimal workload)
-- Linux
+- GitHub Actions (CI/CD)
+- Docker Hub (Image Registry)
+- AWS EC2 (Cloud Deployment)
+- Linux (Amazon Linux)
 
 ## Architecture
 → Client (Browser)
@@ -27,107 +34,89 @@ A minimal Flask app is used intentionally so the focus remains on infrastructure
 ## Project Structure
 ```bash
 dockerized-flask-nginx/
+│
 ├── app/
 │   └── app.py
+│
 ├── nginx/
 │   └── nginx.conf
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+│
 ├── Dockerfile
 ├── docker-compose.yml
-├── .gitignore
-└── README.md
-
+├── README.md
+└── .gitignore
 ```
-## How It Works
-- The Flask app runs inside a Docker container and listens on port 5000.
-- Nginx runs in a separate container and listens on port 80.
-- Nginx forwards incoming HTTP requests to the Flask app using:
+## Running Locally
+Clone the repository:
 ```bash
-proxy_pass http://app:5000;
+git clone https://github.com/Juhee2306/dockerized-flask-nginx
+cd dockerized-flask-nginx
 ```
-- Docker Compose:
-1. Creates a shared network
-2. Provides automatic service discovery
-3. Manages both containers as a single system
-
-## Running the Project
+Start the application:
 ```bash
 docker compose up --build
 ```
-Access the Application at:
+Access:
 ```bash
 http://localhost
 ```
-## Intentional Failures & Debugging
-This project includes deliberate failure scenarios to practice real-world debugging.
+## CI/CD Pipeline
+The project includes an automated deployment pipeline using GitHub Actions.
+Pipeline workflow:
 
-1. Flask Container Stopped
+Git Push
+   ↓
+GitHub Actions
+   ↓
+Build Docker Image
+   ↓
+Push Image to Docker Hub
+   ↓
+SSH into AWS EC2
+   ↓
+docker compose pull
+   ↓
+docker compose up -d
 
-Result: Browser returns 502 Bad Gateway
-Diagnosis:
+This allows the application to update automatically after every commit.
+## Cloud Deployment
+The application runs on an AWS EC2 instance (Amazon Linux).
+Security group configuration:
 ```bash
-docker ps
+Port 22  → SSH
+Port 80  → HTTP
+```
+Public architecture:
+```bash
+Client → Internet → EC2 → Nginx → Flask
+```
+## DevOps Concepts Demonstrated
+
+- Docker containerization
+- Multi-container orchestration
+- Reverse proxy architecture
+- Docker networking
+- CI/CD automation
+- Remote deployment with SSH
+- Cloud infrastructure on AWS
+## Example Failure Scenario
+Stopping the Flask container results in:
+502 Bad Gateway
+# Diagnosis:
 docker compose logs nginx
-```
-Learning: A reverse proxy depends on the upstream service being available.
-
-2. Port Mismatch in Nginx Configuration
-
-Changed the upstream port in nginx.conf
-Result: Nginx starts successfully but cannot reach Flask
-Diagnosis:
-```bash
-docker compose logs nginx
-```
-
-Learning: Many production failures are caused by port misconfiguration, not code issues.
-
-3. Bind Mount Restart Failure (Docker Desktop / WSL)
-
-Restarting Nginx failed due to a bind-mounted configuration file
-
-Correct fix:
-```bash
-docker compose down
-docker compose up --build
-```
-Learning: Containers are disposable — recreating them is safer than restarting broken infrastructure.
-
-## Key Learnings
-
-- Difference between host ports and container ports
-- Why application servers should not face the internet directly
-- Role of Nginx as a reverse proxy
-- Docker networking and service-name DNS
-- Using logs to diagnose failures instead of reinstalling blindly
-- Treating infrastructure as reproducible and disposable
-
+# Learning:
+Reverse proxies depend on upstream services being available.
 ## Outcome
+A production-style containerized system with:
+- Nginx reverse proxy
+- Flask application
+- Docker Compose orchestration
+- CI/CD deployment pipeline
+- AWS EC2 hosting
 
-A working, production-style containerized setup with:
-- Clean traffic flow
-- Proper separation of concerns
-- Debuggable failure scenarios
-- Clear understanding of runtime behavior
 
-## Cloud Deployment (AWS EC2)
 
-This application was deployed on an Amazon Linux EC2 instance.
-## Deployment Steps:
-- Launched EC2 instance (Amazon Linux 2023)
-- Configured security group:
-- Port 22 (SSH – My IP)
-- Port 80 (HTTP – Public)
-- Installed Docker and Docker Compose manually
-- Cloned repository on EC2
-- Built and ran containers
-- Accessed application via public IP
-
-## Public Architecture:
-
-Client → Internet → EC2 (Port 80) → Nginx → Flask (Port 5000)
-
-## Real-World Issues Faced:
-- Docker Compose buildx not available on Amazon Linux
-- Manual installation of Compose plugin required
-- SSH session interruptions
-- Understanding container restart behavior after instance stop
